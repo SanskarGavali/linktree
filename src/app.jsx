@@ -90,7 +90,7 @@ const projects = [
     category: "FARMER",
     title: "BANK SAHAYAK",
     description:
-      "A farmer-focused Progressive Web App concept designed to make banking and document-related information easier to understand and access.",
+      "A farmer-focused Progressive Web App concept designed to make banking and document-related information easier to understand and access Developed on ai studio .",
     technologies: ["React", "TypeScript", "PWA"],
     url: "https://bank-sahayak.lovable.app",
     icon: Wheat,
