@@ -11,10 +11,10 @@ import {
   UserRound,
   Mail,
   Sparkles,
-  Globe,
   AtSign,
   BookOpen,
   Shield,
+  Wheat,
 } from "lucide-react";
 
 // SOCIAL LINKS
@@ -70,9 +70,9 @@ const projects = [
     category: "PERSONAL PROJECT",
     title: "Dear Silence.",
     description:
-      "A digital home for poetry, letters, shayari and everything left unsaid. An experience inspired by the feeling of opening an old handwritten diary.",
+      "A digital space for poetry, letters and shayari, designed around the feeling of opening an old handwritten diary. Created with an AI-assisted development workflow.",
     technologies: ["React", "TypeScript", "Vite", "Supabase"],
-    link: "https://dearsilence.ai.studio/",
+    url: "https://dearsilence.ai.studio/",
     icon: Code2,
   },
   {
@@ -80,10 +80,20 @@ const projects = [
     category: "WOMEN'S SAFETY",
     title: "Abhaya",
     description:
-      "A women's safety Progressive Web Application featuring SOS assistance, location sharing, safe places and emergency reporting.",
+      "A women's safety Progressive Web App concept featuring SOS assistance, location sharing, safe places and emergency reporting. Developed with an AI-assisted workflow.",
     technologies: ["React", "TypeScript", "Supabase", "PWA"],
-    link: "https://abhaya-seafty.lovable.app",
+    url: "https://abhaya-seafty.lovable.app",
     icon: Shield,
+  },
+   {
+    number: "03",
+    category: "FARMER",
+    title: "BANK SAHAYAK",
+    description:
+      "A farmer-focused Progressive Web App concept designed to make banking and document-related information easier to understand and access.",
+    technologies: ["React", "TypeScript", "PWA"],
+    url: "https://bank-sahayak.lovable.app",
+    icon: Wheat,
   },
 ];
 
@@ -146,19 +156,24 @@ function App() {
   };
 
   useEffect(() => {
-    if (!lightboxIsOpen) return;
+    if (!showCamera && !lightboxIsOpen) return;
 
     const handleKeyDown = (event) => {
       if (event.key === "Escape") {
-        setLightboxIndex(null);
-      } else if (event.key === "ArrowLeft") {
+        if (lightboxIsOpen) {
+          setLightboxIndex(null);
+        } else {
+          setShowCamera(false);
+          setSelectedCollection(null);
+        }
+      } else if (lightboxIsOpen && event.key === "ArrowLeft") {
         event.preventDefault();
         setLightboxIndex((current) =>
           current === null
             ? 0
             : (current - 1 + activeImages.length) % activeImages.length
         );
-      } else if (event.key === "ArrowRight") {
+      } else if (lightboxIsOpen && event.key === "ArrowRight") {
         event.preventDefault();
         setLightboxIndex((current) =>
           current === null
@@ -170,24 +185,33 @@ function App() {
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [lightboxIsOpen, activeImages.length]);
+  }, [showCamera, lightboxIsOpen, activeImages.length]);
 
   return (
-    <main className="site-shell min-h-screen text-white selection:bg-violet-300 selection:text-black">
+    <main id="top" className="site-shell min-h-screen text-white selection:bg-violet-300 selection:text-black">
 
       {/* NAVIGATION */}
       <nav className="site-nav mx-auto flex max-w-5xl items-center justify-between px-5 py-5 sm:px-7">
-        <a href="#" className="text-xl font-bold tracking-tight">
+        <a href="#top" aria-label="Back to top" className="text-xl font-bold tracking-tight">
           sanskar<span className="text-violet-400">.</span>
         </a>
 
-        <div className="flex items-center gap-4 text-xs text-zinc-400 sm:gap-7 sm:text-sm">
+        <div className="flex items-center gap-3 text-xs text-zinc-400 sm:gap-7 sm:text-sm">
           <a href="#projects" className="transition hover:text-white">
             Projects
           </a>
 
           <a href="#photography" className="transition hover:text-white">
             Photography
+          </a>
+
+          <a
+            href="https://dearsilence.ai.studio/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="transition hover:text-white"
+          >
+            Diary
           </a>
 
           <a href="#about" className="transition hover:text-white">
@@ -338,7 +362,7 @@ function App() {
             </p>
 
             <h2 className="text-2xl font-semibold">
-              Selected projects.
+              College projects.
             </h2>
           </div>
 
@@ -352,14 +376,14 @@ function App() {
             return (
               <article
                 key={project.number}
-                className="project-card rounded-2xl border border-zinc-800 p-5"
+                className="project-card flex h-full flex-col rounded-2xl border border-zinc-800 p-5"
               >
                 <div className="mb-7 flex items-center justify-between">
                   <span className="text-xs text-zinc-500">
                     {project.number}
                   </span>
 
-                  <Icon size={21} className="text-violet-400" />
+                  <Icon size={21} className="text-violet-400" aria-hidden="true" />
                 </div>
 
                 <p className="mb-2 text-[10px] tracking-widest text-amber-400">
@@ -373,6 +397,28 @@ function App() {
                 <p className="mt-2 text-sm leading-6 text-zinc-400">
                   {project.description}
                 </p>
+
+                <div className="mt-4 flex flex-wrap gap-2">
+                  {project.technologies.map((technology) => (
+                    <span
+                      key={technology}
+                      className="rounded-full border border-zinc-700 px-2.5 py-1 text-[11px] text-zinc-400"
+                    >
+                      {technology}
+                    </span>
+                  ))}
+                </div>
+
+                <a
+                  href={project.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={`Open ${project.title} project in a new tab`}
+                  className="mt-auto inline-flex w-fit items-center gap-2 pt-6 text-sm font-semibold text-violet-300 transition hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-violet-300"
+                >
+                  View project
+                  <ArrowUpRight size={16} aria-hidden="true" />
+                </a>
               </article>
             );
           })}
@@ -392,7 +438,7 @@ function App() {
           </p>
 
           <h2 className="text-2xl font-semibold">
-            Curious by nature.
+            Curious towards astronomy.
           </h2>
 
           <p className="mt-3 text-sm leading-7 text-zinc-400">
@@ -406,12 +452,12 @@ function App() {
 
       {/* FOOTER */}
       <footer className="mx-auto flex w-[min(100%-28px,720px)] flex-col gap-3 border-t border-zinc-800 py-7 text-xs text-zinc-500 sm:flex-row sm:items-center sm:justify-between">
-        <a href="#" className="text-base font-bold text-white">
+        <a href="#top" aria-label="Back to top" className="text-base font-bold text-white">
           sanskar<span className="text-violet-400">.</span>
         </a>
 
         <p>
-          Built with curiosity. © {new Date().getFullYear()} Sanskar.
+          Built with curiosity. © {new Date().getFullYear()}.
         </p>
 
         <a
@@ -419,7 +465,7 @@ function App() {
           className="flex items-center gap-2 transition hover:text-white"
         >
           <Mail size={14} />
-          Get in touch
+          Let's talk
         </a>
       </footer>
 
